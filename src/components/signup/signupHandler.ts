@@ -11,8 +11,10 @@ interface Data {
 
 export const signupHandler = async (data: Data) => {
     try {
-        await axios.post(`${SERVER_URL}/signup-company`, data);
+        const response = await axios.post(`${SERVER_URL}/signup-company`, data);
+        return {companyId: response.data.companyId, userId: response.data.userId}
     } catch (error) {
         console.error(error);
+        return {companyId: "", userId: ""}
     }
 };

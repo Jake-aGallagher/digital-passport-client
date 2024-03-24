@@ -1,9 +1,12 @@
 'use client';
 import { signupHandler } from '@/components/signup/signupHandler';
 import { yupResolverSignup } from '@/components/signup/signupValidation';
+import { loginUser } from '@/redux/slices/userSlice';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 
 const Signup = () => {
+    const dispatch = useDispatch();
     const {
         register,
         handleSubmit,
@@ -15,7 +18,12 @@ const Signup = () => {
 
     const handleRegistration = async (data: any) => {
         console.log('submitted: ', data);
-        await signupHandler(data);
+        const {companyId, userId} = await signupHandler(data);
+        if (companyId && userId) {
+            dispatch(loginUser({userId, companyId}));
+        } else {
+            alert('Error creating company, please try again');
+        }
     };
 
     return (
