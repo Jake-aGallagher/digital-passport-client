@@ -9,9 +9,9 @@ interface Data {
 export const LoginHandler = async (data: Data) => {
     try {
         const response = await axios.post(`${SERVER_URL}/login`, data);
-        return {companyId: response.data.companyId, userId: response.data.userId}
+        return {companyId: response.data.companyId, userId: response.data.userId, token: response.data.token}
     } catch (error) {
         console.error(error);
-        return {companyId: "", userId: ""}
+        return {companyId: "", userId: "", token: ""};
     }
 };

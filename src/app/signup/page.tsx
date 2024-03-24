@@ -1,4 +1,5 @@
 'use client';
+import { setToken } from '@/components/authToken';
 import { signupHandler } from '@/components/signup/signupHandler';
 import { yupResolverSignup } from '@/components/signup/signupValidation';
 import { loginUser } from '@/redux/slices/userSlice';
@@ -18,9 +19,10 @@ const Signup = () => {
 
     const handleRegistration = async (data: any) => {
         console.log('submitted: ', data);
-        const {companyId, userId} = await signupHandler(data);
+        const {companyId, userId, token} = await signupHandler(data);
         if (companyId && userId) {
             dispatch(loginUser({userId, companyId}));
+            setToken(token);
         } else {
             alert('Error creating company, please try again');
         }

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
+import { removeToken } from './authToken';
 
 const Navbar = () => {
     const userId = useSelector((state: RootState) => state.userReducer.value.userId);
@@ -12,6 +13,7 @@ const Navbar = () => {
     const [loggedIn, setLoggedIn] = useState(userId !== "");
 
     const logoutHandler = () => {
+        removeToken();
         dispatch(logoutUser());
         setLoggedIn(false);
     }

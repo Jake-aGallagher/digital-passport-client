@@ -1,4 +1,5 @@
 'use client';
+import { setToken } from "@/components/authToken";
 import { LoginHandler } from "@/components/login/loginHandler";
 import { yupResolverLogin } from "@/components/login/loginValidation";
 import { loginUser } from "@/redux/slices/userSlice";
@@ -20,10 +21,10 @@ const Login = () => {
 
     const handleRegistration = async (data: any) => {
         console.log('submitted: ', data);
-        const {companyId, userId} = await LoginHandler(data);
+        const {companyId, userId, token} = await LoginHandler(data);
         if (companyId && userId) {
             dispatch(loginUser({userId, companyId}));
-
+            setToken(token);
             router.push('/passports');
         } else {
             alert('Error creating company, please try again');
