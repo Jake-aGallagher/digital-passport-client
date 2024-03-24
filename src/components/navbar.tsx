@@ -19,7 +19,7 @@ const Navbar = () => {
     useEffect(() => {
         setLoggedIn(userId !== "");
     }, [userId])
-    
+
     return (
         <nav className="fixed top-0 left-0 right-0 h-12 md:text-xl text-white flex flex-row justify-start md:justify-center items-center gap-4 md:gap-12">
             <Link href="/" className="ml-2 md:ml-0">
