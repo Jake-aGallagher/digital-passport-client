@@ -3,21 +3,25 @@ import { useEffect, useState } from 'react';
 import { SERVER_URL } from '../apiURL';
 
 interface Passport {
-    CompanyId: string;
-    PassportId: string;
-    Created: string;
-    PassportName: string;
-    Locked: boolean;
+    companyId: string;
+    passportId: string;
+    created: string;
+    passportName: string;
+    locked: boolean;
 }
 
 export const usePassports = (companyId: string) => {
     const [passports, setPassports] = useState<Passport[]>([]);
     const [loading, setLoading] = useState(true);
-    const [noData, setNoData] = useState(false);
 
     useEffect(() => {
-        getHandler();
+        reload();
     }, [companyId]);
+
+    const reload = () => {
+        setLoading(true);
+        getHandler();
+    }
 
     const getHandler = async () => {
         try {
@@ -26,8 +30,6 @@ export const usePassports = (companyId: string) => {
             });
             if (response.data.passports?.length > 0) {
                 setPassports(response.data.passports);
-            } else {
-                setNoData(true);
             }
             setLoading(false);
         } catch (error) {
@@ -37,5 +39,5 @@ export const usePassports = (companyId: string) => {
         
     }
 
-    return { passports, loading, noData };
+    return { passports, loading, reload };
 };
