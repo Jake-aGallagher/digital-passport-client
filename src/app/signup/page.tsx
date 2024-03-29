@@ -18,7 +18,6 @@ const Signup = () => {
     });
 
     const handleRegistration = async (data: any) => {
-        console.log('submitted: ', data);
         const {companyId, userId, token} = await signupHandler(data);
         if (companyId && userId) {
             dispatch(loginUser({userId, companyId}));
