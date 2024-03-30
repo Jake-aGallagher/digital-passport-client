@@ -6,6 +6,7 @@ export const useAddEditPassport = (companyId: string, passportId: string) => {
     const [loading, setLoading] = useState(true);
     const [defaultValues, setDefaultValues] = useState({
         passportName: '',
+        locked: false,
     });
 
     useEffect(() => {
@@ -24,6 +25,7 @@ export const useAddEditPassport = (companyId: string, passportId: string) => {
             });
             setDefaultValues({
                 passportName: response.data.passport.passportName,
+                locked: response.data.passport.locked,
             });
             setLoading(false);
         } catch (error) {
