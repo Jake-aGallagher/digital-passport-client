@@ -20,7 +20,7 @@ export const useAddEditPassport = (companyId: string, passportId: string, setLin
 
     const getPassport = async () => {
         try {
-            const response = await axios.get(`${SERVER_URL}/passports/${companyId}/${passportId}`, {
+            const response = await axios.get(`${SERVER_URL}/passports/passport/${passportId}`, {
                 headers: { Authorization: localStorage.getItem('token') },
             });
             setDefaultValues({
