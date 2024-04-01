@@ -1,8 +1,8 @@
 import { SERVER_URL } from "@/components/apiURL";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-export const useAddEditPassport = (companyId: string, passportId: string) => {
+export const useAddEditPassport = (companyId: string, passportId: string, setLinkedArr: Dispatch<SetStateAction<string[]>>) => {
     const [loading, setLoading] = useState(true);
     const [defaultValues, setDefaultValues] = useState({
         passportName: '',
@@ -27,6 +27,7 @@ export const useAddEditPassport = (companyId: string, passportId: string) => {
                 passportName: response.data.passport.passportName,
                 locked: response.data.passport.locked,
             });
+            setLinkedArr(response.data.passport.linkedArr);
             setLoading(false);
         } catch (error) {
             console.error(error);
