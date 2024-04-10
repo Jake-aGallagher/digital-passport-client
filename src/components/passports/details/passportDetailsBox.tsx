@@ -28,7 +28,7 @@ const PassportDetailsBox = (props: Props) => {
 
     const filesList = passport.files.map((file) => (
         <div key={file}>
-            <div>{file}</div>
+            <div>{file.split('___')[1]}</div>
         </div>
     ));
 

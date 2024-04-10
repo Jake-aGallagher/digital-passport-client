@@ -58,7 +58,7 @@ const Passport = () => {
                 </div>
             ) : (
                 <div className="w-10/12 mt-8">
-                    {modal.view && <AddEditPassport passportId={modal.passportId} companyId={companyId} close={() => [setModal({view: false, passportId: ""}), reload()]} />}
+                    {modal.view && <AddEditPassport passportId={modal.passportId} close={() => [setModal({view: false, passportId: ""}), reload()]} />}
                     <div className="w-full h-8 mb-4 flex flex-row justify-end">
                         <button onClick={() => setModal({view: true, passportId: ""})} className="border border-slate-800 hover:bg-slate-800 transition-all p-2 flex flex-row justify-center items-center rounded-md">
                             + Passport

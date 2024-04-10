@@ -12,14 +12,14 @@ export interface DefaultValues {
 
 interface Props {
     close: () => void;
-    companyId: string;
     passportId: string;
 }
 
 const AddEditPassport = (props: Props) => {
     const [linkedInput, setLinkedInput] = useState<string>('');
     const [linkedPassports, setLinkedPassports] = useState<string[]>([]);
-    const { defaultValues, loading } = useAddEditPassport(props.companyId, props.passportId, setLinkedPassports);
+    const [fileList, setFileList] = useState<string[]>([]);
+    const { defaultValues, loading } = useAddEditPassport(props.passportId, setLinkedPassports, setFileList);
     const {
         register,
         handleSubmit,
@@ -38,9 +38,9 @@ const AddEditPassport = (props: Props) => {
 
     const handleRegistration = async (data: any) => {
         try {
-            const fullData = { ...data, passportId: props.passportId, linkedArr: linkedPassports };
+            const fullData = { ...data, passportId: props.passportId, linkedArr: linkedPassports, files: fileList };
             const options = { headers: { Authorization: localStorage.getItem('token') } };
-            if (props.passportId == "") {
+            if (props.passportId == '') {
                 await axios.post(`${SERVER_URL}/passports`, fullData, options);
             } else {
                 await axios.put(`${SERVER_URL}/passports/${props.passportId}`, fullData, options);
@@ -60,6 +60,25 @@ const AddEditPassport = (props: Props) => {
         const temp = linkedPassports;
         temp.splice(index, 1);
         setLinkedPassports([...temp]);
+    };
+
+    const addFile = async (file: File) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        const response = await axios.post(`${SERVER_URL}/files`, formData, { headers: { Authorization: localStorage.getItem('token'), 'Content-Type': 'multipart/form-data' } });
+        const resFileName = response.data.fileName;
+        setFileList((prev) => [...prev, resFileName]);
+    };
+
+    const getFile = async (file: string) => {
+        const response = await axios.get(`${SERVER_URL}/files/${file}`, { headers: { Authorization: localStorage.getItem('token') }, responseType: 'blob' });
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', file.split('___')[1]);
+        document.body.appendChild(link);
+        link.click();
     };
 
     return (
@@ -99,6 +118,23 @@ const AddEditPassport = (props: Props) => {
                                                         -
                                                     </button>
                                                 </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+
+                            <label className="text-white w-72">
+                                <div className="mb-2">Upload Documents</div>
+                                <input type="file" onChange={(e) => (e.target.files ? addFile(e.target.files[0]) : null)} />
+                            </label>
+                            {fileList.length > 0 && (
+                                <div className="w-72">
+                                    <h2 className="text-white">Uploaded Files:</h2>
+                                    <ul className="text-white text-xs">
+                                        {fileList.map((file) => (
+                                            <li key={file} onClick={() => getFile(file)} className="border-b hover:border-blue-300 hover:text-blue-300 w-fit transition-all hover:cursor-pointer">
+                                                {file.split('___')[1]}
                                             </li>
                                         ))}
                                     </ul>
