@@ -1,1 +1,1 @@
-export const SERVER_URL = process.env.NEXT_PUBLIC_DEVELOPMENT === 'TRUE' ? 'http://localhost:7071/api' : process.env.NEXT_PUBLIC_SERVER_URL;
+export const SERVER_URL = process.env.NEXT_PUBLIC_PRODUCTION === 'TRUE' ? process.env.NEXT_PUBLIC_SERVER_URL : 'http://localhost:7071/api';
