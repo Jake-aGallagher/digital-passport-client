@@ -71,9 +71,6 @@ const AddEditPassport = (props: Props) => {
             if (!sasToken) {
                 throw new Error('SAS Token not found');
             }
-            if (!process.env.NEXT_PUBLIC_STORAGE_URL) {
-                throw new Error('Storage URL not found');
-            }
             const containerClient = new ContainerClient(sasToken, new AnonymousCredential());
             const blobName = uuid() + '___' + file.name;
             const blockBlobClient = containerClient.getBlockBlobClient(blobName);
