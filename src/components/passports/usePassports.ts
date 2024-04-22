@@ -4,7 +4,7 @@ import { SERVER_URL } from '../apiURL';
 
 interface Passport {
     companyId: string;
-    passportId: string;
+    _id: string;
     created: string;
     passportName: string;
     locked: boolean;

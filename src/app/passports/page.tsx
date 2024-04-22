@@ -18,17 +18,17 @@ const Passport = () => {
     const [modal, setModal] = useState({view: false, passportId: ''});
 
     const PassportList = passports.map((passport) => (
-        <tr key={passport.passportId} className="mt-2">
+        <tr key={passport._id} className="mt-2">
             <td className="w-1/4 text-center">
-                <Link href={`/passports/${passport.passportId}`} className="group border-b-2 hover:border-blue-300 transition-all">
-                    <span className="group-hover:text-blue-300 transition-all">{passport.passportId}</span>
+                <Link href={`/passports/${passport._id}`} className="group border-b-2 hover:border-blue-300 transition-all">
+                    <span className="group-hover:text-blue-300 transition-all">{passport._id}</span>
                 </Link>
             </td>
             <td className="text-center">{new Date(passport.created).toLocaleDateString()}</td>
             <td className="text-center">{passport.passportName}</td>
             <td className="text-center">{passport.locked ? 'Locked' : 'Editable'}</td>
             <td className='text-center'>{passport.locked ? "" : (
-                <button onClick={() => setModal({view: true, passportId: passport.passportId})} className='text-xl h-8 w-8 rotate-90 hover:text-blue-300 transition-all'>&#9998;</button>
+                <button onClick={() => setModal({view: true, passportId: passport._id})} className='text-xl h-8 w-8 rotate-90 hover:text-blue-300 transition-all'>&#9998;</button>
             )}</td>
         </tr>
     ));

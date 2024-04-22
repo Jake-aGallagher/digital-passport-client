@@ -5,6 +5,8 @@ import { SERVER_URL } from '@/components/apiURL';
 import { useEffect, useMemo, useState } from 'react';
 import { useAddEditPassport } from './useAddEditPassport';
 import LoadingSpinner from '@/components/loadingSpinner/loadingSpinner';
+import { v4 as uuid } from 'uuid';
+import { AnonymousCredential, ContainerClient } from '@azure/storage-blob';
 
 export interface DefaultValues {
     passportName: string;
@@ -63,20 +65,32 @@ const AddEditPassport = (props: Props) => {
     };
 
     const addFile = async (file: File) => {
-        const formData = new FormData();
-        formData.append('file', file);
-        const response = await axios.post(`${SERVER_URL}/files`, formData, { headers: { Authorization: localStorage.getItem('token'), 'Content-Type': 'multipart/form-data' } });
-        const resFileName = response.data.fileName;
-        setFileList((prev) => [...prev, resFileName]);
+        try {
+            const tokenRes = await axios.get(`${SERVER_URL}/getSASToken/write/null`, { headers: { Authorization: localStorage.getItem('token') } });
+            const sasToken = tokenRes.data;
+            if (!sasToken) {
+                throw new Error('SAS Token not found');
+            }
+            if (!process.env.NEXT_PUBLIC_STORAGE_URL) {
+                throw new Error('Storage URL not found');
+            }
+            const containerClient = new ContainerClient(sasToken, new AnonymousCredential());
+            const blobName = uuid() + '___' + file.name;
+            const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+            await blockBlobClient.uploadData(file, { blobHTTPHeaders: { blobContentType: file.type, blobContentDisposition: `attachment; filename="${file.name}"` } })
+            setFileList((prev) => [...prev, blobName]);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     const getFile = async (file: string) => {
-        const response = await axios.get(`${SERVER_URL}/files/${file}`, { headers: { Authorization: localStorage.getItem('token') }, responseType: 'blob' });
+        const tokenRes = await axios.get(`${SERVER_URL}/getSASToken/read/${file}`, { headers: { Authorization: localStorage.getItem('token') } });
+        const sasToken = tokenRes.data;
 
-        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const url = sasToken
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', file.split('___')[1]);
         document.body.appendChild(link);
         link.click();
     };
